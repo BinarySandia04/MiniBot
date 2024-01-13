@@ -1,6 +1,7 @@
 import random
-import time
 import asyncio
+import os
+import json
 import discord
 from discord.ext import commands
 
@@ -11,56 +12,121 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='%%', intents=intents)
 
 token = ""
+data = None
+save_data = {
+    "guilds": [],
+    "current_dif": 2,
+    "messages": ["Juan haz el minimini"]
+}
+
 # Obrim el token del server del fitxer .token
 with open(".token") as f:
     token = f.read()
 
+with open("data.json") as f:
+    data = json.loads(f.read())
 
-guilds = []
+if os.path.exists(".save_data.json"):
+    with open(".save_data.json") as f:
+        save_data = json.loads(f.read())
 
-lines = [
-    {"name": "R1", "image": "R1.jpg", "server_name": "R1 - Rodalies de Catalunya"},
-    {"name": "R2", "image": "R2.png", "server_name": "R2 - Rodalies de Catalunya"},
-    {"name": "R2 Nord", "image": "R2_Nord.png", "server_name": "R2 Nord - Rodalies de Catalunya"},
-    {"name": "R2 Sud", "image": "R2_Sud.png", "server_name": "R2 Sud - Rodalies de Catalunya"},
-    {"name": "R3", "image": "R3.png", "server_name": "R3 - Rodalies de Catalunya"},
-    {"name": "R4", "image": "R4.png", "server_name": "R4 - Rodalies de Catalunya"},
-    {"name": "R7", "image": "R7.png", "server_name": "R7 - Rodalies de Catalunya"},
-    {"name": "R8", "image": "R8.png", "server_name": "R8 - Rodalies de Catalunya"},
-    {"name": "R11", "image": "R12.png", "server_name": "R12 - Rodalies de Catalunya"},
-    {"name": "R13", "image": "R13.png", "server_name": "R13 - Rodalies de Catalunya"},
-    {"name": "R14", "image": "R14.png", "server_name": "R14 - Rodalies de Catalunya"},
-    {"name": "R15", "image": "R15.png", "server_name": "R15 - Rodalies de Catalunya"},
-    {"name": "R16", "image": "R16.png", "server_name": "R16 - Rodalies de Catalunya"},
-    {"name": "R17", "image": "R17.png", "server_name": "R17 - Rodalies de Catalunya"},
-    {"name": "RG1", "image": "RG1.png", "server_name": "RG1 - Rodalies de Catalunya"},
-    {"name": "RT1", "image": "RT1.png", "server_name": "RT1 - Rodalies de Catalunya"},
-    {"name": "RT2", "image": "RT2.png", "server_name": "RT2 - Rodalies de Catalunya"},
-]
+
+def save():
+    global save_data
+    with open(".save_data.json", "w") as f:
+        f.write(json.dumps(save_data))
+    print("Data saved succesfully")
+
+async def fetch_guild(guild_id):
+    return bot.get_guild(guild_id)
+
+async def fetch_channel(channel_id):
+    return bot.get_channel(channel_id)
+
+async def change_icon(img_path):
+    with open(img_path, 'rb') as file:
+            imagen_bytes = file.read()
+    # Cambia la imagen del servidor
+    await bot.user.edit(avatar=imagen_bytes)
+
+async def global_log(msg):
+    for guild_obj in save_data["guilds"]:
+        channel = await fetch_channel(guild_obj["log_channel"])
+        await channel.send(msg)
+                
+async def update_difficulty():
+    if save_data["current_dif"] < 0:
+        save_data["current_dif"] = 0
+    if save_data["current_dif"] >= len(data["difficulties"]):
+        save_data["current_dif"] = len(data["difficulties"]) - 1
+    
+    save()
+    
+    await change_icon("data/difficulty/" + data["difficulties"][save_data["current_dif"]]["icon"])
+    await global_log("Dificultad cambiada a " + data["difficulties"][save_data["current_dif"]]["name"])
+
+
+@bot.command(name='dif')
+async def change_difficulty(ctx, cmd):
+    print("????")
+    global save_data
+
+    if cmd == "up":
+        save_data["current_dif"] += 1
+        await update_difficulty()
+    elif cmd == "down":
+        save_data["current_dif"] -= 1
+        await update_difficulty()
+    else:
+        await ctx.send('Dificultad actual: ' + data["difficulties"][save_data["current_dif"]]["name"])
+
+@bot.command(name="msg")
+async def _msg_add(ctx, cmd: str, msg: str):
+    if cmd == "add":
+        if msg is not None:
+            save_data["messages"].append(msg)
+
+            save()
+            await ctx.send("Añadido mensaje " + msg)
 
 # Comando para cambiar la imagen del servidor
 @bot.command(name='set_server')
-async def _set_server(ctx):
+async def _set_server(ctx, first_channel_id: str, second_channel_id: str):
 
-    global guilds
+    global save_data
     # Verifica si el bot tiene permisos para cambiar la configuración del servidor
     if ctx.guild and ctx.guild.me.guild_permissions.manage_guild:
 
-        guilds = list(filter(lambda x : x["guild"] != ctx.guild, guilds))
-        guilds.append({ "guild": ctx.guild, "channel": ctx.channel })
+        save_data["guilds"] = list(filter(lambda x : x["id"] != ctx.guild.id, save_data["guilds"]))
+        save_data["guilds"].append({
+            "id": ctx.guild.id,
+            "log_channel": ctx.channel.id,
+            "first_channel": int(first_channel_id),
+            "second_channel": int(second_channel_id)
+        })
 
-        print(guilds)
+        print(save_data["guilds"])
+
+        save()
 
         await ctx.send('¡Servidor registrado correctamente en este canal!')
-        # await change_image(ctx.guild, ctx.channel)
 
     else:
         await ctx.send('El bot no tiene permisos para cambiar la configuración del servidor.')
 
-async def change_image(guild, log_channel):
+async def change_line(guild_object):
+
+    guild = await fetch_guild(guild_object["id"])
+    channel = await fetch_channel(guild_object["log_channel"])
+
+    vc1 = await fetch_channel(guild_object["first_channel"])
+    vc2 = await fetch_channel(guild_object["second_channel"])
+
+    print(guild)
+
     if guild and guild.me.guild_permissions.manage_guild:
 
-        line = lines[random.randint(0,len(lines) - 1)]
+        line = data["lines"][random.randint(0,len(data["lines"]) - 1)]
 
         # Construye la ruta de la imagen
         imagen_path = f'./data/lines/{line["image"]}'  # Ajusta según la ubicación y el formato de tus imágenes
@@ -71,7 +137,11 @@ async def change_image(guild, log_channel):
 
         # Cambia la imagen del servidor
         await guild.edit(icon=imagen_bytes, name=line["server_name"])
-        await log_channel.send("Servidor cambiado a " + line["name"] + "!")
+
+        await vc1.edit(name = line["start"])
+        await vc2.edit(name = line["end"])
+
+        await channel.send("Servidor cambiado a " + line["name"] + "!")
 
     else:
         print('El bot no tiene permisos para cambiar la configuración del servidor ' + guild.name)
@@ -79,14 +149,29 @@ async def change_image(guild, log_channel):
 @bot.event
 async def on_ready():
     asyncio.ensure_future(main())
-    
+
+@bot.event
+async def on_message(message):
+    await bot.process_commands(message)
+    required = data["difficulties"][save_data["current_dif"]]["odd"]
+    if random.uniform(0, 1) < required:
+        msg = save_data["messages"][random.randint(0, len(save_data["messages"]) - 1)]
+        await message.channel.send(msg, reference=message)
+
 
 async def main():
-    print("EHHHH macarena")
+    global data
+    global save_data
+
+    print("Data:")
+    print(data)
+    print("Save data:")
+    print(save_data)
     while True:
-        if len(guilds) > 0:
-            for guild in guilds:
-                await change_image(guild["guild"], guild["channel"])
+        if len(save_data["guilds"]) > 0:
+            for guild_obj in save_data["guilds"]:
+                pass
+                # await change_line(guild_obj)
             await asyncio.sleep(3600)
         else:
             print("Esperant servers...")

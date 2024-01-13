@@ -1,0 +1,187 @@
+{
+    "lines": [
+        {
+            "name": "R1",
+            "image": "R1.jpg",
+            "server_name": "R1 - Rodalies de Catalunya",
+            "start": "Molins de Rei - Maçanet-Massanes",
+            "end": "Maçanet-Massanes - Molins de Rei"
+        },
+        {
+            "name": "R2",
+            "image": "R2.png",
+            "server_name": "R2 - Rodalies de Catalunya",
+            "start": "Granollers Centre - Castelldefels",
+            "end": "Castelldefels - Granollers Centre"
+        },
+        {
+            "name": "R2 Nord",
+            "image": "R2_Nord.png",
+            "server_name": "R2 Nord - Rodalies de Catalunya",
+            "start": "Maçanet-Massanes - Aeroport",
+            "end": "Aeroport - Maçanet-Massanes"
+        },
+        {
+            "name": "R2 Sud",
+            "image": "R2_Sud.png",
+            "server_name": "R2 Sud - Rodalies de Catalunya",
+            "start": "Estació de França - Sant Vicenç de Calders",
+            "end": "Sant Vicenç de Calders - Estació de França"
+        },
+        {
+            "name": "R3",
+            "image": "R3.png",
+            "server_name": "R3 - Rodalies de Catalunya",
+            "start": "L’Hospitalet de Llobregat - Puigcerdà",
+            "end": "Puigcerdà - L’Hospitalet de Llobregat"
+        },
+        {
+            "name": "R4",
+            "image": "R4.png",
+            "server_name": "R4 - Rodalies de Catalunya",
+            "start": "Sant Vicenç de Calders - Manresa",
+            "end": "Manresa - Sant Vicenç de Calders"
+        },
+        {
+            "name": "R7",
+            "image": "R7.png",
+            "server_name": "R7 - Rodalies de Catalunya",
+            "start": "Barcelona Fabra i Puig - Cerdanyola Universitat",
+            "end": "Cerdanyola Universitat - Barcelona Fabra i Puig"
+        },
+        {
+            "name": "R8",
+            "image": "R8.png",
+            "server_name": "R8 - Rodalies de Catalunya",
+            "start": "Martorell Central - Granollers Centre",
+            "end": "Granollers Centre - Martorell Central"
+        },
+        {
+            "name": "R11",
+            "image": "R11.png",
+            "server_name": "R11 - Rodalies de Catalunya",
+            "start": "Barcelona Sants - Portbou",
+            "end": "Portbou - Barcelona Sants"
+        },
+        {
+            "name": "R12",
+            "image": "R12.png",
+            "server_name": "R12 - Rodalies de Catalunya",
+            "start": "L’Hospitalet de Llobregat - Lleida",
+            "end": "Lleida - L'Hospitalet de Llobregat"
+        },
+        {
+            "name": "R13",
+            "image": "R13.png",
+            "server_name": "R13 - Rodalies de Catalunya",
+            "start": "Barcelona Estació de França - Lleida",
+            "end": "Lleida - Barcelona Estació de França"
+        },
+        {
+            "name": "R14",
+            "image": "R14.png",
+            "server_name": "R14 - Rodalies de Catalunya",
+            "start": "Barcelona Estació de França - Lleida",
+            "end": "Lleida - Barcelona Estació de França"
+        },
+        {
+            "name": "R15",
+            "image": "R15.png",
+            "server_name": "R15 - Rodalies de Catalunya",
+            "start": "Barcelona Estació de França - Riba-roja d’Ebre",
+            "end": "Riba-roja d’Ebre - Barcelona Estació de França"
+        },
+        {
+            "name": "R16",
+            "image": "R16.png",
+            "server_name": "R16 - Rodalies de Catalunya",
+            "start": "Barcelona Estació de França - Tortosa / Ulldecona",
+            "end": "Tortosa / Ulldecona - Barcelona Estació de França"
+        },
+        {
+            "name": "R17",
+            "image": "R17.png",
+            "server_name": "R17 - Rodalies de Catalunya",
+            "start": "Barcelona Estació de França - Salou / Port Aventura",
+            "end": "Salou / Port Aventura - Barcelona Estació de França"
+        },
+        {
+            "name": "RG1",
+            "image": "RG1.png",
+            "server_name": "RG1 - Rodalies de Catalunya",
+            "start": "Mataró / Blanes - Figueres / Portbou",
+            "end": "Figueres / Portbou - Mataró Blanes"
+        },
+        {
+            "name": "RT1",
+            "image": "RT1.png",
+            "server_name": "RT1 - Rodalies de Catalunya",
+            "start": "Tarragona - Reus",
+            "end": "Reus - Tarragona"
+        },
+        {
+            "name": "RT2",
+            "image": "RT2.png",
+            "server_name": "RT2 - Rodalies de Catalunya",
+            "start": "L’Arboç - Salou / Port Aventura",
+            "end": "Salou / Port Aventura - L'Arboç"
+        }
+    ],
+    "difficulties": [
+        {
+            "name": "Auto",
+            "icon": "auto.webp",
+            "odd": 0
+        },
+        {
+            "name": "Easy",
+            "icon": "easy.png",
+            "odd": 0.04
+        },
+        {
+            "name": "Normal",
+            "icon": "normal.webp",
+            "odd": 0.08
+        },
+        {
+            "name": "Hard",
+            "icon": "hard.webp",
+            "odd": 0.12
+        },
+        {
+            "name": "Harder",
+            "icon": "harder.webp",
+            "odd": 0.16
+        },
+        {
+            "name": "Insane",
+            "icon": "insane.webp",
+            "odd": 0.2
+        },
+        {
+            "name": "Easy Demon",
+            "icon": "easy_demon.webp",
+            "odd": 0.24
+        },
+        {
+            "name": "Normal Demon",
+            "icon": "normal_demon.webp",
+            "odd": 0.28
+        },
+        {
+            "name": "Hard Demon",
+            "icon": "hard_demon.png",
+            "odd": 0.32
+        },
+        {
+            "name": "Insane Demon",
+            "icon": "insane_demon.webp",
+            "odd": 0.36
+        },
+        {
+            "name": "Extreme Demon",
+            "icon": "extreme_demon.webp",
+            "odd": 0.4
+        }
+    ]
+}
