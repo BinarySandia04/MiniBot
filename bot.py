@@ -170,8 +170,7 @@ async def main():
     while True:
         if len(save_data["guilds"]) > 0:
             for guild_obj in save_data["guilds"]:
-                pass
-                # await change_line(guild_obj)
+                await change_line(guild_obj)
             await asyncio.sleep(3600)
         else:
             print("Esperant servers...")
