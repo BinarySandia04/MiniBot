@@ -47,7 +47,10 @@ async def change_icon(img_path):
     with open(img_path, 'rb') as file:
             imagen_bytes = file.read()
     # Cambia la imagen del servidor
-    await bot.user.edit(avatar=imagen_bytes)
+    try:
+        await bot.user.edit(avatar=imagen_bytes)
+    except:
+        print("Error muy rapido cambio de avatar")
 
 async def global_log(msg):
     for guild_obj in save_data["guilds"]:
@@ -67,7 +70,7 @@ async def update_difficulty():
 
 
 @bot.command(name='dif')
-async def change_difficulty(ctx, cmd):
+async def change_difficulty(ctx, cmd, num):
     print("????")
     global save_data
 
@@ -76,6 +79,9 @@ async def change_difficulty(ctx, cmd):
         await update_difficulty()
     elif cmd == "down":
         save_data["current_dif"] -= 1
+        await update_difficulty()
+    elif cmd == "set":
+        save_data["current_dif"] = int(num)
         await update_difficulty()
     else:
         await ctx.send('Dificultad actual: ' + data["difficulties"][save_data["current_dif"]]["name"])
@@ -141,8 +147,6 @@ async def change_line(guild_object):
         await vc1.edit(name = line["start"])
         await vc2.edit(name = line["end"])
 
-        await channel.send("Servidor cambiado a " + line["name"] + "!")
-
     else:
         print('El bot no tiene permisos para cambiar la configuración del servidor ' + guild.name)
 
@@ -158,6 +162,19 @@ async def on_message(message):
         msg = save_data["messages"][random.randint(0, len(save_data["messages"]) - 1)]
         await message.channel.send(msg, reference=message)
 
+async def random_dif_update():
+    global data
+    global save_data
+    mod = len(data["difficulties"]) / 2 - save_data["current_dif"]
+    # És més baix si la dif és més alta
+
+    up_prob = 0.5 + ((mod / len(data["difficulties"])) * 2) / 4
+    if random.uniform(0,1) < up_prob:
+        save_data["current_dif"] += 1
+        await update_difficulty()
+    else:
+        save_data["current_dif"] -= 1
+        await update_difficulty()
 
 async def main():
     global data
@@ -171,9 +188,10 @@ async def main():
         if len(save_data["guilds"]) > 0:
             for guild_obj in save_data["guilds"]:
                 await change_line(guild_obj)
-            await asyncio.sleep(3600)
+                if(save_data["current_dif"] != 0):
+                    await random_dif_update()
+            await asyncio.sleep(3600 * 24)
         else:
-            print("Esperant servers...")
             await asyncio.sleep(1)
 
 # Conecta el bot al servidor de Discord
