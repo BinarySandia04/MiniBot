@@ -222,7 +222,7 @@ async def main():
     while True:
         if len(save_data["guilds"]) > 0:
             for guild_obj in save_data["guilds"]:
-                # await change_line(guild_obj)
+                await change_line(guild_obj)
 
                 print("???")
                 await tree.sync(guild=discord.Object(id=guild_obj["id"]))
