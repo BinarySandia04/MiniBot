@@ -216,6 +216,9 @@ async def main():
     print(data)
     print("Save data:")
     print(save_data)
+
+    await global_log("Bot reiniciado")
+
     while True:
         if len(save_data["guilds"]) > 0:
             for guild_obj in save_data["guilds"]:
