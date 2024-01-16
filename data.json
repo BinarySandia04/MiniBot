@@ -136,52 +136,52 @@
         {
             "name": "Easy",
             "icon": "easy.png",
-            "odd": 0.04
+            "odd": 0.02
         },
         {
             "name": "Normal",
             "icon": "normal.webp",
-            "odd": 0.08
+            "odd": 0.04
         },
         {
             "name": "Hard",
             "icon": "hard.webp",
-            "odd": 0.12
+            "odd": 0.06
         },
         {
             "name": "Harder",
             "icon": "harder.webp",
-            "odd": 0.16
+            "odd": 0.08
         },
         {
             "name": "Insane",
             "icon": "insane.webp",
-            "odd": 0.2
+            "odd": 0.12
         },
         {
             "name": "Easy Demon",
             "icon": "easy_demon.webp",
-            "odd": 0.24
+            "odd": 0.15
         },
         {
             "name": "Normal Demon",
             "icon": "normal_demon.webp",
-            "odd": 0.28
+            "odd": 0.18
         },
         {
             "name": "Hard Demon",
             "icon": "hard_demon.png",
-            "odd": 0.32
+            "odd": 0.22
         },
         {
             "name": "Insane Demon",
             "icon": "insane_demon.webp",
-            "odd": 0.36
+            "odd": 0.26
         },
         {
             "name": "Extreme Demon",
             "icon": "extreme_demon.webp",
-            "odd": 0.4
+            "odd": 0.3
         }
     ]
 }
