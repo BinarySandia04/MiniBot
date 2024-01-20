@@ -6,7 +6,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-
+#juan haz el mini mini porfa :sob: :pray:
 # Crea una instancia del bot
 intents = discord.Intents.default()
 intents.message_content = True

@@ -1,2 +1,4 @@
 .token
 .save_data.json
+venv/
+.idea/
