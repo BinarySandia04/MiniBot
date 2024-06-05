@@ -11,8 +11,7 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='/', intents=intents)
-tree = bot.tree
+bot = commands.Bot(command_prefix='%%', intents=intents)
 
 token = ""
 OWNER_USERID = 342287101225598987
@@ -72,53 +71,39 @@ async def update_difficulty():
     await change_icon("data/difficulty/" + data["difficulties"][save_data["current_dif"]]["icon"])
     await global_log("Dificultad cambiada a " + data["difficulties"][save_data["current_dif"]]["name"])
 
-
-@tree.command(name='dif')
-@app_commands.describe(command="Acción que hacer con el comando")
-@app_commands.choices(command=[
-    app_commands.Choice(name='Up', value=1),
-    app_commands.Choice(name='Down', value=2),
-    app_commands.Choice(name='Show', value=3)
-    ])
-async def change_difficulty(ctx, command: app_commands.Choice[int]):
-    print("????")
+@bot.command(name='dif')
+async def change_difficulty(ctx, cmd, num):
     global save_data
 
-    if command.name == "Up":
+    if cmd.name == "up":
         save_data["current_dif"] += 1
         await update_difficulty()
-    elif command.name == "Down":
+    elif cmd.name == "down":
         save_data["current_dif"] -= 1
+        await update_difficulty()
+    elif cmd.name == "set":
+        save_data["current_dif"] = int(num)
         await update_difficulty()
     else:
         await ctx.send('Dificultad actual: ' + data["difficulties"][save_data["current_dif"]]["name"])
 
-@tree.command(name="difset", description="Fija la dificultad del bot")
-@app_commands.describe(num="Número de la dificultad (más alto más dificultad)")
-async def set_difficulty(ctx, num: int):
-    save_data["current_dif"] = int(num)
-    await update_difficulty()
 
-@tree.command(name="test", description="Crec que no va")
-async def test_command(interaction: discord.Interaction):
-    await interaction.response.send_message("Test")
-
-@tree.command(name="msg")
-@app_commands.describe(cmd="Comanda a fer amb els missatges")
-@app_commands.describe(msg="Missatge a posar")
-async def _msg_add(ctx: discord.Interaction, cmd: str, msg: str):
+@bot.command(name="msg")
+async def _msg_add(ctx, cmd: str = None, msg: str = None):
+    print(cmd)
     if cmd == "add":
         if msg is not None:
             save_data["messages"].append(msg)
 
             save()
             await ctx.send("Añadido mensaje " + msg)
+    if cmd == "list":
+        print("\n -".join(save_data["messages"]))
+        await ctx.send("- " + "\n- ".join(save_data["messages"]))
 
 # Comando para cambiar la imagen del servidor
-@tree.command(name='set_server')
-@app_commands.describe(first_channel="Primer canal")
-@app_commands.describe(second_channel="Segon canal")
-async def _set_server(ctx, first_channel: discord.VoiceChannel, second_channel: discord.VoiceChannel):
+@bot.command(name='set_server')
+async def _set_server(ctx, first_channel_id: str, second_channel_id: str): 
 
     global save_data
     # Verifica si el bot tiene permisos para cambiar la configuración del servidor
@@ -128,8 +113,8 @@ async def _set_server(ctx, first_channel: discord.VoiceChannel, second_channel: 
         save_data["guilds"].append({
             "id": ctx.guild.id,
             "log_channel": ctx.channel.id,
-            "first_channel": int(first_channel.id),
-            "second_channel": int(second_channel.id)
+            "first_channel": int(first_channel_id),
+            "second_channel": int(second_channel_id)
         })
 
         print(save_data["guilds"])
@@ -140,15 +125,6 @@ async def _set_server(ctx, first_channel: discord.VoiceChannel, second_channel: 
 
     else:
         await ctx.send('El bot no tiene permisos para cambiar la configuración del servidor.')
-
-@bot.command()
-async def sync(ctx):
-    print("sync command")
-    if ctx.author.id == OWNER_USERID:
-        await bot.tree.sync()
-        await ctx.send('Command tree synced.')
-    else:
-        await ctx.send('You must be the owner to use this command!')
 
 async def change_line(guild_object):
 
@@ -223,10 +199,6 @@ async def main():
         if len(save_data["guilds"]) > 0:
             for guild_obj in save_data["guilds"]:
                 await change_line(guild_obj)
-
-                print("???")
-                await tree.sync(guild=discord.Object(id=guild_obj["id"]))
-                print("QUe")
                 if(save_data["current_dif"] != 0):
                     await random_dif_update()
             await asyncio.sleep(3600 * 24)
